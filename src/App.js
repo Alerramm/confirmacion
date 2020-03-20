@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Layout, Menu, Icon } from 'antd';
 import PageHeaders from './components/PageHeader/PageHeader';
-import Cuentas from './containers/Cuentas/Cuentas';
+import Confirmacion from './containers/Confirmacion/Confirmacion';
 import Analitycs from './containers/Analitycs/Analitycs';
 
 import './App.css';
@@ -55,7 +55,7 @@ class App extends Component {
 				<Layout>
 					<PageHeaders />
 					<Content>
-						{opcion === 'tabla' && <Cuentas />}
+						{opcion === 'tabla' && <Confirmacion />}
 						{opcion === 'analitycs' && <Analitycs />}
 					</Content>
 				</Layout>
