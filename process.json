@@ -1,10 +1,10 @@
 {
 	"apps": [
 		{
-			"name": "cuentas",
+			"name": "confirmacion",
 			"cwd": "./src/",
 			"script": "npm",
-			"args": "run production"
+			"args": "run start"
 		}
 	]
 }
