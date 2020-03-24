@@ -19,8 +19,9 @@ class Confirmacion extends Component {
 			{ title: 'Numero Tramo', dataIndex: 'indexRoute', key: 'idexRoute' },
 			{ title: 'Fecha', dataIndex: 'fecha', key: 'fecha' },
 			{ title: 'Destino', dataIndex: 'destino', key: 'destino' },
+			{ title: 'Entrega', dataIndex: 'entrega', key: 'entrega' },
 			{ title: 'Casetas', dataIndex: 'casetas', key: 'casetas' },
-			{ title: 'Estatus', dataIndex: 'estatus', key: 'estatus' },
+			{ title: 'Distancia', dataIndex: 'distancia', key: 'distancia' },
 		];
 		return <Table columns={columns} dataSource={record.tramos} pagination={false} />;
 	};
@@ -101,52 +102,61 @@ class Confirmacion extends Component {
 		];
 		
 		consultaViajes().then(response => {
-			const viajes = response.payload;
-			console.log(viajes);
+			let viajes = response.payload;
 			/* const semana1 = new Date(
 				Date.UTC(semanaUno.getFullYear(), semanaUno.getMonth(), semanaUno.getDate(), 6, 0, 0)
 			); */
-
-			viajes.map((item, index) => {
-				consultaTramos(item.id).then(response => {
-					const tram=[];
-					if(Array.isArray(response.payload)){
-						response.payload.map((item, index) => {
-							tram.push({
-								key: "T"+item.id,
-								indexRoute:item.indexRoute,
-								fecha:item.fecha,
-								origen:item.origen,
-								destino:item.destino,
-								casetas:item.casetas,
-								estatus:item.estatus,
+			if (viajes === null){
+				viajes=[];
+				this.setState({
+					columns,
+					data:viajes,
+					loading:false
+				});
+			} else {
+				viajes.map((item, index) => {
+					consultaTramos(item.id).then(response => {
+						const tram=[];
+						if(Array.isArray(response.payload)){
+							response.payload.map((item, index) => {
+								tram.push({
+									key: "T"+item.id,
+									indexRoute:item.tramo,
+									fecha:item.fecha,
+									origen:item.origen,
+									destino:item.destino,
+									entrega:item.entrega,
+									casetas:item.casetas,
+									distancia:item.distancia,
+								});
+								return item;
 							});
-							return item;
+						}
+						data.push({
+							key: item.id,
+							baseDeOperaciones:item.base_operaciones,
+							cliente: item.cliente,
+							destino:item.destino,
+							fechaDeCarga:item.fecha_carga,
+							fechaDeEntrega:item.fechaEntregaTemporal,
+							unidad:item.unidad,
+							operador:item.operador,
+							disel: item.diesel,
+							totalDeCasetas:item.casetas,
+							totalDistancia:item.distancia,
+							tramos:tram,
 						});
-					}
-					data.push({
-						key: item.id,
-						baseDeOperaciones:item.base_operaciones,
-						cliente: item.cliente,
-						destino:item.ciudad,
-						fechaDeCarga:item.fecha_carga,
-						fechaDeEntrega:item.fechaEntregaTemporal,
-						unidad:item.unidad,
-						operador:item.operador,
-						disel: item.diesel,
-						totalDeCasetas:item.total_casetas,
-						totalDistancia:item.total_distancia,
-						tramos:tram,
-					});
-					this.setState({
-						columns,
-						data,
-						loading:false
-					});
-					return tram;
-				});	
-				return item;
-			});
+						this.setState({
+							columns,
+							data,
+							loading:false
+						});
+						return tram;
+					});	
+					return item;
+				});
+			}
+			
 		});
 	};
 	render() {

@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/Alerramm/cuentas.git/static/css/main.1a8c57ed.chunk.css",
-    "main.js": "/Alerramm/cuentas.git/static/js/main.d2637760.chunk.js",
-    "main.js.map": "/Alerramm/cuentas.git/static/js/main.d2637760.chunk.js.map",
-    "runtime-main.js": "/Alerramm/cuentas.git/static/js/runtime-main.a50a97d2.js",
-    "runtime-main.js.map": "/Alerramm/cuentas.git/static/js/runtime-main.a50a97d2.js.map",
-    "static/css/2.ff8bd605.chunk.css": "/Alerramm/cuentas.git/static/css/2.ff8bd605.chunk.css",
-    "static/js/2.fd5d6ed1.chunk.js": "/Alerramm/cuentas.git/static/js/2.fd5d6ed1.chunk.js",
-    "static/js/2.fd5d6ed1.chunk.js.map": "/Alerramm/cuentas.git/static/js/2.fd5d6ed1.chunk.js.map",
+    "main.css": "/Alerramm/cuentas.git/static/css/main.ac160739.chunk.css",
+    "main.js": "/Alerramm/cuentas.git/static/js/main.e870f406.chunk.js",
+    "main.js.map": "/Alerramm/cuentas.git/static/js/main.e870f406.chunk.js.map",
+    "runtime-main.js": "/Alerramm/cuentas.git/static/js/runtime-main.e63319c8.js",
+    "runtime-main.js.map": "/Alerramm/cuentas.git/static/js/runtime-main.e63319c8.js.map",
+    "static/css/2.2e872fcd.chunk.css": "/Alerramm/cuentas.git/static/css/2.2e872fcd.chunk.css",
+    "static/js/2.b51b097b.chunk.js": "/Alerramm/cuentas.git/static/js/2.b51b097b.chunk.js",
+    "static/js/2.b51b097b.chunk.js.map": "/Alerramm/cuentas.git/static/js/2.b51b097b.chunk.js.map",
     "index.html": "/Alerramm/cuentas.git/index.html",
-    "precache-manifest.d7d6ac117eebad15ac0554690b47d377.js": "/Alerramm/cuentas.git/precache-manifest.d7d6ac117eebad15ac0554690b47d377.js",
+    "precache-manifest.b805c321b2cc767927338ad9124fe43f.js": "/Alerramm/cuentas.git/precache-manifest.b805c321b2cc767927338ad9124fe43f.js",
     "service-worker.js": "/Alerramm/cuentas.git/service-worker.js",
-    "static/css/2.ff8bd605.chunk.css.map": "/Alerramm/cuentas.git/static/css/2.ff8bd605.chunk.css.map",
-    "static/css/main.1a8c57ed.chunk.css.map": "/Alerramm/cuentas.git/static/css/main.1a8c57ed.chunk.css.map",
-    "static/js/2.fd5d6ed1.chunk.js.LICENSE": "/Alerramm/cuentas.git/static/js/2.fd5d6ed1.chunk.js.LICENSE"
+    "static/css/2.2e872fcd.chunk.css.map": "/Alerramm/cuentas.git/static/css/2.2e872fcd.chunk.css.map",
+    "static/css/main.ac160739.chunk.css.map": "/Alerramm/cuentas.git/static/css/main.ac160739.chunk.css.map",
+    "static/js/2.b51b097b.chunk.js.LICENSE.txt": "/Alerramm/cuentas.git/static/js/2.b51b097b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a50a97d2.js",
-    "static/css/2.ff8bd605.chunk.css",
-    "static/js/2.fd5d6ed1.chunk.js",
-    "static/css/main.1a8c57ed.chunk.css",
-    "static/js/main.d2637760.chunk.js"
+    "static/js/runtime-main.e63319c8.js",
+    "static/css/2.2e872fcd.chunk.css",
+    "static/js/2.b51b097b.chunk.js",
+    "static/css/main.ac160739.chunk.css",
+    "static/js/main.e870f406.chunk.js"
   ]
 }
