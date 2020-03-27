@@ -3,7 +3,17 @@ import {
 	CONSULTAR_VIAJES,
 	CONSULTAR_TRAMOS,
 	ACTUALIZA_ESTATUS_FACTURAS,
+	CONSULTAR_TIPO_VIAJES,
 } from '../../constants/Endpoints';
+
+export const consultaTipoViajes = async () => {
+	const queryView = {
+		endpoint: CONSULTAR_TIPO_VIAJES,
+		method: 'GET',
+	};
+	return confirmacionApiGet(queryView);
+};
+
 export const consultaViajes = async () => {
 	const queryView = {
 		endpoint: CONSULTAR_VIAJES,
