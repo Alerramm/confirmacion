@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Layout, Table, InputNumber, Badge, Dropdown } from 'antd';
+import { Layout, Table, InputNumber, Badge, Dropdown, Button } from 'antd';
 import { consultaViajes, consultaTramos, consultaTipoViajes } from './ConfirmacionActions';
 const { Content } = Layout;
 class Confirmacion extends Component {
@@ -14,6 +14,7 @@ class Confirmacion extends Component {
 		btnAplicar: true,
 		idKey: '',
 		tipoViaje:[],
+		selectedRowKeys: [],
 	};
 	dias = (distancia) => {
 		const { tipoViaje } = this.state;
@@ -56,6 +57,7 @@ class Confirmacion extends Component {
 		let comision;
 		 tipoViaje.map(tipos => {
 			 if (record.totalDistancia < tipos.kmsFin && record.totalDistancia >tipos.kmsIni){
+				console.log("entre");
 				comision=tipos.numDias*tipos[record.unidad.slice(0,record.unidad.search("-"))+"_comision"];
 			} 
 			return tipos;
@@ -370,16 +372,30 @@ class Confirmacion extends Component {
 		 });
 		
 	};
-	
+	onSelectChange = selectedRowKeys => {
+		console.log('selectedRowKeys changed: ', selectedRowKeys);
+		this.setState({ selectedRowKeys });
+	  };
 	render() {
-		const { data, columns, loading } = this.state;
+		const { data, columns, loading, selectedRowKeys } = this.state;
+		const hasSelected = selectedRowKeys.length > 0;
 		return (
 			<Fragment>
 				<Content>
 					<Layout style={{ padding: '24px 24px', background: '#fff' }}>
+					<div style={{ marginBottom: 16 }}>
+						<Button type="primary" onClick={this.start} disabled={!hasSelected} loading={loading}>
+							PLANEAR
+						</Button>
+						<span style={{ marginLeft: 8 }}>
+							{hasSelected ? `Seleccionado ${selectedRowKeys.length} viajes` : ''}
+						</span>
+					</div>
 						<Table
 							rowSelection={{
 								type: "checkbox",
+								selectedRowKeys,
+      							onChange: this.onSelectChange,
 								}}
 							className="components-table-demo-nested"
 							columns={columns}
