@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Layout, Table, InputNumber } from 'antd';
+import { Layout, Table, InputNumber, Badge, Dropdown } from 'antd';
 import { consultaViajes, consultaTramos, consultaTipoViajes } from './ConfirmacionActions';
 const { Content } = Layout;
 class Confirmacion extends Component {
@@ -33,6 +33,19 @@ class Confirmacion extends Component {
 		 tipoViaje.map(tipos => {
 			 if (record.totalDistancia < tipos.kmsFin && record.totalDistancia >tipos.kmsIni){
 				disel=record.totalDistancia/tipos[record.unidad.slice(0,record.unidad.search("-"))+"_Rend"+tipo]*record.disel;
+			} 
+			return tipos;
+		}); 
+		return parseFloat(disel).toFixed(2);
+	}
+
+	diselTramo = (distancia,diselP,unidad) => {
+		const { tipoViaje } = this.state;
+		let disel,tipo="Loc";
+		if (distancia > 150) tipo="For";
+		 tipoViaje.map(tipos => {
+			 if (distancia < tipos.kmsFin && distancia >tipos.kmsIni){
+				disel=distancia/tipos[unidad.slice(0,unidad.search("-"))+"_Rend"+tipo]*diselP;
 			} 
 			return tipos;
 		}); 
@@ -83,14 +96,43 @@ class Confirmacion extends Component {
 			data
 		});
 	}
+	estatus = (label) => {
+		let badge = 'error';
+		if (label === "Pendiente") {
+			badge = 'warning';
+		}
+		if (label === "Aprobado") {
+			badge = 'success';
+		}
+		return (
+			<Dropdown>
+				<div>
+					{label} <Badge status={badge} />
+				</div>
+			</Dropdown>
+		);
+	};
 	expandedRowRender =  record => {
 		const columns = [
 			{ title: 'Numero Tramo', dataIndex: 'indexRoute', key: 'idexRoute' },
 			{ title: 'Fecha', dataIndex: 'fecha', key: 'fecha' },
 			{ title: 'Destino', dataIndex: 'destino', key: 'destino' },
 			{ title: 'Entrega', dataIndex: 'entrega', key: 'entrega' },
-			{ title: 'Casetas', dataIndex: 'casetas', key: 'casetas' },
 			{ title: 'Distancia', dataIndex: 'distancia', key: 'distancia' },
+			{
+				title: 'DISEL',
+				dataIndex: 'disel',
+				key: 'disel',
+				render: (text,recordT) => (
+					<InputNumber
+						defaultValue={this.diselTramo(recordT.distancia,record.disel,record.unidad)}
+						style={{ width: '75px' }}
+						disabled
+						formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+					/>
+				),
+			},
+			{ title: 'Casetas', dataIndex: 'casetas', key: 'casetas' },
 		];
 		return <Table columns={columns} dataSource={record.tramos} pagination={false} />;
 	};
@@ -149,7 +191,7 @@ class Confirmacion extends Component {
 					render: text => (
 						<InputNumber
 							value={text}
-							style={{ width: '90px' }}
+							style={{ width: '75px' }}
 							disabled
 							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						/>
@@ -179,7 +221,7 @@ class Confirmacion extends Component {
 					key: 'precio',
 					render: (text,record) => (
 						<InputNumber
-							style={{ width: '90px' }}
+							style={{ width: '100%' }}
 							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 							onChange = {value => this.handleChange(record.key,value,"precio")}
 						/>
@@ -192,7 +234,7 @@ class Confirmacion extends Component {
 					render: (text,record) => (
 						<InputNumber
 							defaultValue={this.disel(record)}
-							style={{ width: '90px' }}
+							style={{ width: '75px' }}
 							disabled
 							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						/>
@@ -311,6 +353,7 @@ class Confirmacion extends Component {
 								totalDistancia:parseFloat(item.distancia).toFixed(2),
 								grupo:this.grupo(item.distancia),
 								tramos:tram,
+								app:this.estatus(item.estatusOperador),
 							});
 							this.setState({
 								columns,
@@ -335,6 +378,9 @@ class Confirmacion extends Component {
 				<Content>
 					<Layout style={{ padding: '24px 24px', background: '#fff' }}>
 						<Table
+							rowSelection={{
+								type: "checkbox",
+								}}
 							className="components-table-demo-nested"
 							columns={columns}
 							dataSource={data}
