@@ -418,9 +418,7 @@ class Confirmacion extends Component {
 		});
 	};
 	onSelectChange = selectedRowKeys => {
-		console.log(selectedRowKeys);
 		const { data } = this.state;
-		console.log(data);
 		let mod = false,
 			id,
 			operador,
