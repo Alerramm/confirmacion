@@ -42,6 +42,7 @@ class Confirmacion extends Component {
 		return dias;
 	};
 	disel = record => {
+		console.log(record);
 		const { tipoViaje, data } = this.state;
 		let disel,
 			tipo = 'Loc';
@@ -52,6 +53,9 @@ class Confirmacion extends Component {
 					(record.totalDistancia /
 						tipos[record.unidad.slice(0, record.unidad.search('-')) + '_Rend' + tipo]) *
 					record.disel;
+				console.log(record);
+				console.log(tipoViaje);
+				console.log(disel);
 			}
 			return tipos;
 		});
@@ -84,9 +88,7 @@ class Confirmacion extends Component {
 		let comision;
 		tipoViaje.map(tipos => {
 			if (record.totalDistancia < tipos.kmsFin && record.totalDistancia > tipos.kmsIni) {
-				comision =
-					tipos.numDias *
-					tipos[record.unidad.slice(0, record.unidad.search('-')) + '_comision'];
+				comision = tipos[record.unidad.slice(0, record.unidad.search('-')) + '_comision'];
 			}
 			return tipos;
 		});
@@ -467,15 +469,16 @@ class Confirmacion extends Component {
 					const request = {
 						idViaje: element.key,
 						precio: element.precio,
-						dias: '3',
-						disel: '428.82',
+						dias: element.dias ? element.dias : element.diasD,
+						disel: element.diselD,
 						casetas: element.totalDeCasetas,
-						alimentos: '450',
-						comision: '3,600',
+						alimentos: element.alimentos ? element.alimentos : element.alimentosD,
+						comision: element.comisionD,
 						transito: element.transito,
 						maniobras: element.maniobras,
 						direccion_cliente: element.tramos[0].entrega,
 					};
+					console.log(request);
 					confirmaViaje(request).then(response => {
 						if (response.headerResponse.code === 400) {
 							message.error(

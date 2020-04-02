@@ -18,7 +18,7 @@ export const consultaTipoViajes = async () => {
 export const consultaViajes = async () => {
 	const queryView = {
 		endpoint: CONSULTAR_VIAJES,
-		method: 'GET',
+		method: 'POST',
 	};
 	return confirmacionApiGet(queryView);
 };
