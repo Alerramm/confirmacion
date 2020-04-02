@@ -28,7 +28,7 @@ class Confirmacion extends Component {
 		const { tipoViaje, data } = this.state;
 		let dias;
 		tipoViaje.map(tipos => {
-			if (distancia < tipos.kmsFin && distancia > tipos.kmsIni) {
+			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				dias = tipos.numDias;
 			}
 			return tipos;
@@ -42,20 +42,19 @@ class Confirmacion extends Component {
 		return dias;
 	};
 	disel = record => {
-		console.log(record);
 		const { tipoViaje, data } = this.state;
 		let disel,
 			tipo = 'Loc';
 		if (record.totalDistancia > 150) tipo = 'For';
 		tipoViaje.map(tipos => {
-			if (record.totalDistancia < tipos.kmsFin && record.totalDistancia > tipos.kmsIni) {
+			if (
+				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
+				record.totalDistancia + 1 - 1 > tipos.kmsIni
+			) {
 				disel =
 					(record.totalDistancia /
 						tipos[record.unidad.slice(0, record.unidad.search('-')) + '_Rend' + tipo]) *
 					record.disel;
-				console.log(record);
-				console.log(tipoViaje);
-				console.log(disel);
 			}
 			return tipos;
 		});
@@ -74,7 +73,7 @@ class Confirmacion extends Component {
 			tipo = 'Loc';
 		if (distancia > 150) tipo = 'For';
 		tipoViaje.map(tipos => {
-			if (distancia < tipos.kmsFin && distancia > tipos.kmsIni) {
+			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				disel =
 					(distancia / tipos[unidad.slice(0, unidad.search('-')) + '_Rend' + tipo]) *
 					diselP;
@@ -87,7 +86,10 @@ class Confirmacion extends Component {
 		const { tipoViaje, data } = this.state;
 		let comision;
 		tipoViaje.map(tipos => {
-			if (record.totalDistancia < tipos.kmsFin && record.totalDistancia > tipos.kmsIni) {
+			if (
+				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
+				record.totalDistancia + 1 - 1 > tipos.kmsIni
+			) {
 				comision = tipos[record.unidad.slice(0, record.unidad.search('-')) + '_comision'];
 			}
 			return tipos;
@@ -104,7 +106,7 @@ class Confirmacion extends Component {
 		const { tipoViaje, data } = this.state;
 		let alimentos;
 		tipoViaje.map(tipos => {
-			if (distancia < tipos.kmsFin && distancia > tipos.kmsIni) {
+			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				alimentos = tipos.viaticos;
 			}
 			return tipos;
@@ -120,8 +122,9 @@ class Confirmacion extends Component {
 	grupo = distancia => {
 		const { tipoViaje } = this.state;
 		let grupo;
+
 		tipoViaje.map(tipos => {
-			if (distancia < tipos.kmsFin && distancia > tipos.kmsIni) {
+			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				grupo = tipos.descripcion;
 			}
 			return tipos;
@@ -478,7 +481,6 @@ class Confirmacion extends Component {
 						maniobras: element.maniobras,
 						direccion_cliente: element.tramos[0].entrega,
 					};
-					console.log(request);
 					confirmaViaje(request).then(response => {
 						if (response.headerResponse.code === 400) {
 							message.error(
