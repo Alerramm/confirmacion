@@ -10,3 +10,6 @@ export const ACTUALIZA_ESTATUS_FACTURAS =
 /** CONSULTA TIPO DE VIAJES */
 export const CONSULTAR_TIPO_VIAJES =
 	'https://cors-anywhere.herokuapp.com/http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/get/tipoViajes.php';
+/** CONFIRMACION DE VIAJE */
+export const CONFIRMACION_VIAJE =
+	'https://cors-anywhere.herokuapp.com/http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/post/confirmar.php';
