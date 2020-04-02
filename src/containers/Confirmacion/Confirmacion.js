@@ -276,7 +276,7 @@ class Confirmacion extends Component {
 					),
 				},
 				{
-					title: 'DISEL',
+					title: 'DIESEL',
 					dataIndex: 'disel',
 					key: 'disel',
 					render: (text, record) => (
