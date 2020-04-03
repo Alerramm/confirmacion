@@ -27,13 +27,13 @@ class Confirmacion extends Component {
 	dias = (distancia, id) => {
 		const { tipoViaje, data } = this.state;
 		let dias;
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				dias = tipos.numDias;
 			}
 			return tipos;
 		});
-		data.map(viaje => {
+		data.map((viaje) => {
 			if (id === viaje.key) {
 				viaje['diasD'] = dias;
 			}
@@ -41,12 +41,12 @@ class Confirmacion extends Component {
 		});
 		return dias;
 	};
-	disel = record => {
+	disel = (record) => {
 		const { tipoViaje, data } = this.state;
 		let disel,
 			tipo = 'Loc';
 		if (record.totalDistancia > 150) tipo = 'For';
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (
 				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
 				record.totalDistancia + 1 - 1 > tipos.kmsIni
@@ -58,7 +58,7 @@ class Confirmacion extends Component {
 			}
 			return tipos;
 		});
-		data.map(viaje => {
+		data.map((viaje) => {
 			if (record.key === viaje.key) {
 				viaje['diselD'] = parseFloat(disel).toFixed(2);
 			}
@@ -72,7 +72,7 @@ class Confirmacion extends Component {
 		let disel,
 			tipo = 'Loc';
 		if (distancia > 150) tipo = 'For';
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				disel =
 					(distancia / tipos[unidad.slice(0, unidad.search('-')) + '_Rend' + tipo]) *
@@ -82,10 +82,10 @@ class Confirmacion extends Component {
 		});
 		return parseFloat(disel).toFixed(2);
 	};
-	comision = record => {
+	comision = (record) => {
 		const { tipoViaje, data } = this.state;
 		let comision;
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (
 				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
 				record.totalDistancia + 1 - 1 > tipos.kmsIni
@@ -94,7 +94,7 @@ class Confirmacion extends Component {
 			}
 			return tipos;
 		});
-		data.map(viaje => {
+		data.map((viaje) => {
 			if (record.key === viaje.key) {
 				viaje['comisionD'] = parseFloat(comision).toFixed(2);
 			}
@@ -105,13 +105,13 @@ class Confirmacion extends Component {
 	alimentos = (distancia, id) => {
 		const { tipoViaje, data } = this.state;
 		let alimentos;
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				alimentos = tipos.viaticos;
 			}
 			return tipos;
 		});
-		data.map(viaje => {
+		data.map((viaje) => {
 			if (id === viaje.key) {
 				viaje['alimentosD'] = alimentos;
 			}
@@ -119,11 +119,11 @@ class Confirmacion extends Component {
 		});
 		return alimentos;
 	};
-	grupo = distancia => {
+	grupo = (distancia) => {
 		const { tipoViaje } = this.state;
 		let grupo;
 
-		tipoViaje.map(tipos => {
+		tipoViaje.map((tipos) => {
 			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
 				grupo = tipos.descripcion;
 			}
@@ -133,7 +133,7 @@ class Confirmacion extends Component {
 	};
 	handleChange = (id, value, columna) => {
 		const { data } = this.state;
-		data.map(viaje => {
+		data.map((viaje) => {
 			if (id === viaje.key) {
 				viaje[columna] = value;
 			}
@@ -143,7 +143,7 @@ class Confirmacion extends Component {
 			data,
 		});
 	};
-	estatus = label => {
+	estatus = (label) => {
 		let badge = 'error';
 		if (label === 'Pendiente') {
 			badge = 'warning';
@@ -159,7 +159,7 @@ class Confirmacion extends Component {
 			</Dropdown>
 		);
 	};
-	expandedRowRender = record => {
+	expandedRowRender = (record) => {
 		const columns = [
 			{ title: 'Numero Tramo', dataIndex: 'indexRoute', key: 'idexRoute' },
 			{ title: 'Fecha', dataIndex: 'fecha', key: 'fecha' },
@@ -179,7 +179,7 @@ class Confirmacion extends Component {
 						)}
 						style={{ width: '75px' }}
 						disabled
-						formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 					/>
 				),
 			},
@@ -195,7 +195,7 @@ class Confirmacion extends Component {
 			loading: true,
 		});
 
-		consultaTipoViajes().then(response => {
+		consultaTipoViajes().then((response) => {
 			this.setState({
 				tipoViaje: response.payload,
 			});
@@ -239,12 +239,12 @@ class Confirmacion extends Component {
 					title: 'TOTAL DISTANCIA KM',
 					dataIndex: 'totalDistancia',
 					key: 'totalDistancia',
-					render: text => (
+					render: (text) => (
 						<InputNumber
 							value={text}
 							style={{ width: '75px' }}
 							disabled
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						/>
 					),
 				},
@@ -261,8 +261,8 @@ class Confirmacion extends Component {
 						<InputNumber
 							style={{ width: '50px' }}
 							defaultValue={this.dias(record.totalDistancia, record.key)}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'dias')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'dias')}
 						/>
 					),
 				},
@@ -273,8 +273,8 @@ class Confirmacion extends Component {
 					render: (text, record) => (
 						<InputNumber
 							style={{ width: '100%' }}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'precio')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'precio')}
 						/>
 					),
 				},
@@ -286,8 +286,7 @@ class Confirmacion extends Component {
 						<InputNumber
 							defaultValue={this.disel(record)}
 							style={{ width: '75px' }}
-							disabled
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						/>
 					),
 				},
@@ -295,12 +294,12 @@ class Confirmacion extends Component {
 					title: 'TOTAL DE CASETAS',
 					dataIndex: 'totalDeCasetas',
 					key: 'totalDeCasetas',
-					render: text => (
+					render: (text) => (
 						<InputNumber
 							value={text}
 							style={{ width: '70px' }}
 							disabled
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						/>
 					),
 				},
@@ -312,8 +311,8 @@ class Confirmacion extends Component {
 						<InputNumber
 							style={{ width: '100%' }}
 							defaultValue={this.alimentos(record.totalDistancia, record.key)}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'alimentos')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'alimentos')}
 						/>
 					),
 				},
@@ -324,8 +323,8 @@ class Confirmacion extends Component {
 					render: (text, record) => (
 						<InputNumber
 							style={{ width: '100%' }}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'transito')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'transito')}
 						/>
 					),
 				},
@@ -336,8 +335,8 @@ class Confirmacion extends Component {
 					render: (text, record) => (
 						<InputNumber
 							style={{ width: '100%' }}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'maniobras')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'maniobras')}
 						/>
 					),
 				},
@@ -349,8 +348,8 @@ class Confirmacion extends Component {
 						<InputNumber
 							style={{ width: '100%' }}
 							defaultValue={this.comision(record)}
-							formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={value => this.handleChange(record.key, value, 'comision')}
+							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'comision')}
 						/>
 					),
 				},
@@ -360,7 +359,7 @@ class Confirmacion extends Component {
 					key: 'app',
 				},
 			];
-			consultaViajes().then(response => {
+			consultaViajes().then((response) => {
 				let viajes = response.payload;
 				if (response.headerResponse.code === 404) {
 					viajes = [];
@@ -371,7 +370,7 @@ class Confirmacion extends Component {
 					});
 				} else {
 					viajes.map((item, index) => {
-						consultaTramos(item.id).then(response => {
+						consultaTramos(item.id).then((response) => {
 							const tram = [];
 							if (Array.isArray(response.payload)) {
 								response.payload.map((item, index) => {
@@ -422,15 +421,15 @@ class Confirmacion extends Component {
 			});
 		});
 	};
-	onSelectChange = selectedRowKeys => {
+	onSelectChange = (selectedRowKeys) => {
 		const { data } = this.state;
 		let mod = false,
 			id,
 			operador,
 			cliente;
-		const selectItems = selectedRowKeys.filter(item => {
+		const selectItems = selectedRowKeys.filter((item) => {
 			let re = false;
-			data.map(element => {
+			data.map((element) => {
 				if (element.key === item) {
 					if (element.appEstatus === 'Aprobado') {
 						re = true;
@@ -466,8 +465,8 @@ class Confirmacion extends Component {
 	confirmaViaje = () => {
 		const { selectedRowKeys, data } = this.state;
 		let viajeDelete;
-		selectedRowKeys.map(item => {
-			data.map(element => {
+		selectedRowKeys.map((item) => {
+			data.map((element) => {
 				if (element.key === item) {
 					const request = {
 						idViaje: element.key,
@@ -481,7 +480,7 @@ class Confirmacion extends Component {
 						maniobras: element.maniobras,
 						direccion_cliente: element.tramos[0].entrega,
 					};
-					confirmaViaje(request).then(response => {
+					confirmaViaje(request).then((response) => {
 						if (response.headerResponse.code === 400) {
 							message.error(
 								'No puedes mandar campos vacios ' + response.payload.Faltantes
@@ -492,7 +491,7 @@ class Confirmacion extends Component {
 							viajeDelete = response.payload.sqlEstatusUpdate;
 							const { data } = this.state;
 							this.setState({
-								data: data.filter(via => viajeDelete !== via.key),
+								data: data.filter((via) => viajeDelete !== via.key),
 							});
 						}
 					});
