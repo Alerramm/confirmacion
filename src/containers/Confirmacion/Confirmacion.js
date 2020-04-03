@@ -287,6 +287,7 @@ class Confirmacion extends Component {
 							defaultValue={this.disel(record)}
 							style={{ width: '75px' }}
 							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) => this.handleChange(record.key, value, 'disel')}
 						/>
 					),
 				},
@@ -294,12 +295,14 @@ class Confirmacion extends Component {
 					title: 'TOTAL DE CASETAS',
 					dataIndex: 'totalDeCasetas',
 					key: 'totalDeCasetas',
-					render: (text) => (
+					render: (text, record) => (
 						<InputNumber
 							value={text}
 							style={{ width: '70px' }}
-							disabled
 							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							onChange={(value) =>
+								this.handleChange(record.key, value, 'totalDeCasetas')
+							}
 						/>
 					),
 				},
