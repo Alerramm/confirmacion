@@ -287,7 +287,9 @@ class Confirmacion extends Component {
 							defaultValue={this.disel(record)}
 							style={{ width: '75px' }}
 							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'disel')}
+							onChange={(value) =>
+								this.handleChange(record.key, value, 'diselChange')
+							}
 						/>
 					),
 				},
@@ -475,7 +477,7 @@ class Confirmacion extends Component {
 						idViaje: element.key,
 						precio: element.precio,
 						dias: element.dias ? element.dias : element.diasD,
-						disel: element.diselD,
+						disel: element.diselChange ? element.diselChange : element.diselD,
 						casetas: element.totalDeCasetas,
 						alimentos: element.alimentos ? element.alimentos : element.alimentosD,
 						comision: element.comisionD,
