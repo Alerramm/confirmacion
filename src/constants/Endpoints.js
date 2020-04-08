@@ -4,9 +4,6 @@ export const CONSULTAR_VIAJES =
 /** CONSULTA FACTURAS */
 export const CONSULTAR_TRAMOS =
 	'http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/get/tramos.php';
-/** ACTUALIZA ESTATUS FACTURA */
-export const ACTUALIZA_ESTATUS_FACTURAS =
-	'https://cors-anywhere.herokuapp.com/http://www.misistema.mx/beluga/Finanzas/endpoints/cuentas/put/abonar.php';
 /** CONSULTA TIPO DE VIAJES */
 export const CONSULTAR_TIPO_VIAJES =
 	'https://cors-anywhere.herokuapp.com/http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/get/tipoViajes.php';

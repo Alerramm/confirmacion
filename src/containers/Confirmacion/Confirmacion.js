@@ -467,11 +467,11 @@ class Confirmacion extends Component {
 		}
 		this.setState({ selectedRowKeys: selectItems });
 	};
-	confirmaViaje = () => {
+	confirmaViaje = async () => {
 		const { selectedRowKeys, data } = this.state;
 		let viajeDelete;
 		selectedRowKeys.map((item) => {
-			data.map((element) => {
+			data.map(async (element) => {
 				if (element.key === item) {
 					const request = {
 						idViaje: element.key,
@@ -485,7 +485,7 @@ class Confirmacion extends Component {
 						maniobras: element.maniobras,
 						direccion_cliente: element.tramos[0].entrega,
 					};
-					confirmaViaje(request).then((response) => {
+					await confirmaViaje(request).then((response) => {
 						if (response.headerResponse.code === 400) {
 							message.error(
 								'No puedes mandar campos vacios ' + response.payload.Faltantes
