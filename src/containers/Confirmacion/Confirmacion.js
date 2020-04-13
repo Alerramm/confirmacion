@@ -467,13 +467,14 @@ class Confirmacion extends Component {
 		}
 		this.setState({ selectedRowKeys: selectItems });
 	};
-	confirmaViaje = async () => {
+	confirmaViaje = () => {
 		const { selectedRowKeys, data } = this.state;
-		let viajeDelete;
+		let viajeDeleteArray,
+			request = [];
 		selectedRowKeys.map((item) => {
-			data.map(async (element) => {
+			data.map((element) => {
 				if (element.key === item) {
-					const request = {
+					request.push({
 						idViaje: element.key,
 						precio: element.precio,
 						dias: element.dias ? element.dias : element.diasD,
@@ -484,26 +485,27 @@ class Confirmacion extends Component {
 						transito: element.transito,
 						maniobras: element.maniobras,
 						direccion_cliente: element.tramos[0].entrega,
-					};
-					await confirmaViaje(request).then((response) => {
-						if (response.headerResponse.code === 400) {
-							message.error(
-								'No puedes mandar campos vacios ' + response.payload.Faltantes
-							);
-						}
-						if (response.headerResponse.code === 200) {
-							message.success('Viaje confirmado exitosamente');
-							viajeDelete = response.payload.sqlEstatusUpdate;
-							const { data } = this.state;
-							this.setState({
-								data: data.filter((via) => viajeDelete !== via.key),
-							});
-						}
 					});
 				}
 				return element;
 			});
 			return item;
+		});
+		confirmaViaje(request).then((response) => {
+			if (response.headerResponse.code === 400) {
+				message.error('No puedes mandar campos vacios ' + response.payload.Faltantes);
+			}
+			if (response.headerResponse.code === 200) {
+				message.success('Viaje confirmado exitosamente');
+				viajeDeleteArray = response.payload;
+				viajeDeleteArray.map((viajeD) => {
+					const viajeDelete = viajeD.sqlEstatusUpdate;
+					const { data } = this.state;
+					this.setState({
+						data: data.filter((via) => viajeDelete !== via.key),
+					});
+				});
+			}
 		});
 	};
 	render() {
