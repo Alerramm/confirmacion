@@ -504,6 +504,7 @@ class Confirmacion extends Component {
 					this.setState({
 						data: data.filter((via) => viajeDelete !== via.key),
 					});
+					return viajeD;
 				});
 			}
 		});
