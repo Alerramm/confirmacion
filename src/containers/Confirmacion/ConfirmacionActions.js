@@ -2,7 +2,6 @@ import { confirmacionApiGet, cuentasApiPut, confirmacionApiGetJson } from './Con
 import {
 	CONSULTAR_VIAJES,
 	CONSULTAR_TRAMOS,
-	ACTUALIZA_ESTATUS_FACTURAS,
 	CONSULTAR_TIPO_VIAJES,
 	CONFIRMACION_VIAJE,
 } from '../../constants/Endpoints';
@@ -23,7 +22,7 @@ export const consultaViajes = async () => {
 	return confirmacionApiGet(queryView);
 };
 
-export const consultaTramos = async id => {
+export const consultaTramos = async (id) => {
 	const queryView = {
 		endpoint: CONSULTAR_TRAMOS,
 		method: 'POST',
@@ -31,16 +30,8 @@ export const consultaTramos = async id => {
 	};
 	return confirmacionApiGetJson(queryView);
 };
-export const actualizaEstatus = async data => {
-	const queryView = {
-		endpoint: ACTUALIZA_ESTATUS_FACTURAS,
-		method: 'PUT',
-		data,
-	};
-	return cuentasApiPut(queryView);
-};
 
-export const confirmaViaje = async data => {
+export const confirmaViaje = async (data) => {
 	const queryView = {
 		endpoint: CONFIRMACION_VIAJE,
 		method: 'POST',
