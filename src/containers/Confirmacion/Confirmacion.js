@@ -478,6 +478,30 @@ class Confirmacion extends Component {
 						idViaje: element.key,
 						precio: element.precio,
 						dias: element.dias ? element.dias : element.diasD,
+						gastos: [
+							{
+								tipo: 'Diesel',
+								presupuesto: element.diselChange
+									? element.diselChange
+									: element.diselD,
+							},
+							{
+								tipo: 'Casetas',
+								presupuesto: element.totalDeCasetas,
+							},
+							{
+								tipo: 'Alimentos',
+								presupuesto: element.alimentos
+									? element.alimentos
+									: element.alimentosD,
+							},
+							{
+								tipo: 'Comision',
+								presupuesto: element.comisionD,
+							},
+							{ tipo: 'Transito', presupuesto: element.transito },
+							{ tipo: 'Maniobras', presupuesto: element.maniobras },
+						],
 						disel: element.diselChange ? element.diselChange : element.diselD,
 						casetas: element.totalDeCasetas,
 						alimentos: element.alimentos ? element.alimentos : element.alimentosD,
