@@ -152,11 +152,9 @@ class Confirmacion extends Component {
 			badge = 'success';
 		}
 		return (
-			<Dropdown>
-				<div>
-					{label} <Badge status={badge} />
-				</div>
-			</Dropdown>
+			<div>
+				{label} <Badge status={badge} />
+			</div>
 		);
 	};
 	expandedRowRender = (record) => {
