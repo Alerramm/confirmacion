@@ -1,5 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { Layout, Table, InputNumber, Badge, Dropdown, Button, message, Modal } from 'antd';
+import {
+	Layout,
+	Table,
+	InputNumber,
+	Badge,
+	Dropdown,
+	Button,
+	message,
+	Modal,
+	Tag,
+	Typography,
+} from 'antd';
 import {
 	consultaViajes,
 	consultaTramos,
@@ -9,6 +20,7 @@ import {
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 const { confirm } = Modal;
+const { Title } = Typography;
 
 class Confirmacion extends Component {
 	state = {
@@ -24,7 +36,7 @@ class Confirmacion extends Component {
 		tipoViaje: [],
 		selectedRowKeys: [],
 	};
-	dias = (distancia, id) => {
+	/* 	dias = (distancia, id) => {
 		const { tipoViaje, data } = this.state;
 		let dias;
 		tipoViaje.map((tipos) => {
@@ -63,22 +75,6 @@ class Confirmacion extends Component {
 				viaje['diselD'] = parseFloat(disel).toFixed(2);
 			}
 			return viaje;
-		});
-		return parseFloat(disel).toFixed(2);
-	};
-
-	diselTramo = (distancia, diselP, unidad) => {
-		const { tipoViaje } = this.state;
-		let disel,
-			tipo = 'Loc';
-		if (distancia > 150) tipo = 'For';
-		tipoViaje.map((tipos) => {
-			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
-				disel =
-					(distancia / tipos[unidad.slice(0, unidad.search('-')) + '_Rend' + tipo]) *
-					diselP;
-			}
-			return tipos;
 		});
 		return parseFloat(disel).toFixed(2);
 	};
@@ -131,6 +127,8 @@ class Confirmacion extends Component {
 		});
 		return grupo;
 	};
+ */
+	//ok
 	handleChange = (id, value, columna) => {
 		const { data } = this.state;
 		data.map((viaje) => {
@@ -143,287 +141,341 @@ class Confirmacion extends Component {
 			data,
 		});
 	};
+
+	//ok
 	estatus = (label) => {
-		let badge = 'error';
-		if (label === 'Pendiente') {
-			badge = 'warning';
+		let badge = '';
+		switch (label) {
+			case 'Pendiente':
+				badge = 'orange';
+				break;
+			case 'Aprobado':
+				badge = 'green';
+				break;
+			case 'Confirmado':
+				badge = 'green';
+				break;
+			case 'Rechazado':
+				badge = 'red';
+				break;
+			default:
+				badge = 'blue';
+				break;
 		}
-		if (label === 'Aprobado') {
-			badge = 'success';
-		}
-		return (
-			<div>
-				{label} <Badge status={badge} />
-			</div>
-		);
+		return <Tag color={badge}>{label}</Tag>;
 	};
+
+	//ok
 	expandedRowRender = (record) => {
 		const columns = [
-			{ title: 'Numero Tramo', dataIndex: 'indexRoute', key: 'idexRoute' },
-			{ title: 'Fecha', dataIndex: 'fecha', key: 'fecha' },
-			{ title: 'Destino', dataIndex: 'destino', key: 'destino' },
-			{ title: 'Entrega', dataIndex: 'entrega', key: 'entrega' },
-			{ title: 'Distancia', dataIndex: 'distancia', key: 'distancia' },
-			{
-				title: 'DISEL',
-				dataIndex: 'disel',
-				key: 'disel',
-				render: (text, recordT) => (
-					<InputNumber
-						defaultValue={this.diselTramo(
-							recordT.distancia,
-							record.disel,
-							record.unidad
-						)}
-						style={{ width: '75px' }}
-						disabled
-						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-					/>
-				),
-			},
-			{ title: 'Casetas', dataIndex: 'casetas', key: 'casetas' },
+			{ title: 'Id', dataIndex: 'id', key: 'id' },
+			{ title: 'Numero Tramo', dataIndex: 'tramo', key: 'tramo' },
+			{ title: 'Fecha', dataIndex: 'fecha_tramo', key: 'fecha_tramo' },
+			{ title: 'Destino', dataIndex: 'destino_tramo', key: 'destino_tramo' },
+			{ title: 'Entrega', dataIndex: 'entrega_tramo', key: 'entrega_tramo' },
+			{ title: 'Distancia', dataIndex: 'distancia_tramo', key: 'distancia_tramo' },
+			{ title: 'Casetas', dataIndex: 'casetas_tramo', key: 'casetas_tramo' },
 		];
 		return <Table columns={columns} dataSource={record.tramos} pagination={false} />;
 	};
-	monthNames = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
+	//ok
 	componentDidMount = () => {
-		const { data } = this.state;
 		this.setState({
 			loading: true,
 		});
+		let columns = [
+			{ title: 'Id', dataIndex: 'idViaje', key: 'idViaje' },
+			{
+				title: 'ESTATUS',
+				children: [
+					{
+						title: 'OPERADOR',
+						dataIndex: 'estatus_operador',
+						key: 'estatus_operador',
+						render: (record) => {
+							return this.estatus(record);
+						},
+					},
+					{
+						title: 'EMPRESA',
+						dataIndex: 'estatus_empresa',
+						key: 'estatus_empresa',
+						render: (record) => {
+							return this.estatus(record);
+						},
+					},
+				],
+			},
+			{
+				title: 'INFORMACION DE SOLICITUD',
+				children: [
+					{
+						title: 'CLIENTE',
+						dataIndex: 'cliente',
+						key: 'cliente',
+					},
+					{
+						title: 'DIRECCION DE CARGA',
+						dataIndex: 'direccion_carga',
+						key: 'direccion_carga',
+					},
+					{
+						title: 'FECHA DE CARGA',
+						dataIndex: 'fecha_carga',
+						key: 'fecha_carga',
+					},
+				],
+			},
+			{
+				title: 'INFORMACION DE EMPRESA DE TRANSPORTE',
+				children: [
+					{
+						title: 'EMPRESA',
+						dataIndex: 'empresa',
+						key: 'empresa',
+					},
+					{
+						title: 'OPERADOR',
+						dataIndex: 'operador',
+						key: 'operador',
+					},
+					{
+						title: 'UNIDAD',
+						dataIndex: 'unidad',
+						key: 'unidad',
+					},
+				],
+			},
+			{
+				title: 'INFORMACION DE ENTREGA',
+				children: [
+					{
+						title: 'ENTREGA',
+						dataIndex: 'entrega',
+						key: 'entrega',
+					},
+					{
+						title: 'DESTINO',
+						dataIndex: 'destino',
+						key: 'destino',
+					},
+					{
+						title: 'FECHA DE ENTREGA',
+						dataIndex: 'fecha_entrega',
+						key: 'fecha_entrega',
+					},
+				],
+			},
+			{
+				title: 'PRECIO',
+				dataIndex: 'precio',
+				key: 'precio',
+				render: (text, record) => (
+					<InputNumber
+						style={{ width: '80px' }}
+						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+						onChange={(value) => this.handleChange(record.key, value, 'precio')}
+					/>
+				),
+			},
+			{
+				title: 'INFORMACION DE GASTOS',
+				children: [
+					/* {
+							title: 'TOTAL DISTANCIA KM',
+							dataIndex: 'totalDistancia',
+							key: 'totalDistancia',
+							render: (text) => (
+								<InputNumber
+									value={text}
+									style={{ width: '75px' }}
+									disabled
+									formatter={(value) =>
+										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+									}
+								/>
+							),
+						}, */
+					{
+						title: 'DIESEL',
+						dataIndex: 'diesel',
+						key: 'diesel',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) => this.handleChange(record.key, value, 'diesel')}
+							/>
+						),
+					},
 
-		consultaTipoViajes().then((response) => {
+					{
+						title: 'CASETAS',
+						dataIndex: 'total_casetas',
+						key: 'total_casetas',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'total_casetas')
+								}
+							/>
+						),
+					},
+					{
+						title: 'VIATICOS',
+						dataIndex: 'alimentos',
+						key: 'alimentos',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'alimentos')
+								}
+							/>
+						),
+					},
+					/* {
+							title: 'TRANSITO',
+							dataIndex: 'transito',
+							key: 'transito',
+							render: (text, record) => (
+								<InputNumber
+									style={{ width: '100%' }}
+									formatter={(value) =>
+										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+									}
+									onChange={(value) =>
+										this.handleChange(record.key, value, 'transito')
+									}
+								/>
+							),
+						},
+						{
+							title: 'DIAS',
+							dataIndex: 'dias',
+							key: 'dias',
+							render: (text, record) => (
+								<InputNumber
+									style={{ width: '50px' }}
+									defaultValue={this.dias(record.totalDistancia, record.key)}
+									formatter={(value) =>
+										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+									}
+									onChange={(value) =>
+										this.handleChange(record.key, value, 'dias')
+									}
+								/>
+							),
+						}, */
+					{
+						title: 'COMISION',
+						dataIndex: 'comision',
+						key: 'comision',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'comision')
+								}
+							/>
+						),
+					},
+					{
+						title: 'MANIOBRAS',
+						dataIndex: 'maniobras',
+						key: 'maniobras',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'maniobras')
+								}
+							/>
+						),
+					},
+					{
+						title: 'CUSTODIA',
+						dataIndex: 'custodia',
+						key: 'custodia',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'custodia')
+								}
+							/>
+						),
+					},
+					{
+						title: 'EXTERNO',
+						dataIndex: 'externo',
+						key: 'externo',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'externo')
+								}
+							/>
+						),
+					},
+					{
+						title: 'TOTAL DE GASTO',
+						dataIndex: 'total_gasto',
+						key: 'total_gasto',
+						render: (text, record) => (
+							<InputNumber
+								style={{ width: '80px' }}
+								formatter={(value) =>
+									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+								}
+								onChange={(value) =>
+									this.handleChange(record.key, value, 'total_gasto')
+								}
+							/>
+						),
+					},
+					{
+						title: '% DE GASTO',
+						dataIndex: 'porcentaje_gasto',
+						key: 'porcentaje_gasto',
+						render: (text, record) => <Title level={4}>{text}%</Title>,
+					},
+				],
+			},
+		];
+		consultaViajes().then((response) => {
+			let viajes = response.payload;
 			this.setState({
-				tipoViaje: response.payload,
-			});
-			let columns = [
-				{
-					title: 'FECHA DE CARGA',
-					dataIndex: 'fechaDeCarga',
-					key: 'fechaDeCarga',
-				},
-				{
-					title: 'CLIENTE',
-					dataIndex: 'cliente',
-					key: 'cliente',
-				},
-				{
-					title: 'OPERADOR',
-					dataIndex: 'operador',
-					key: 'operador',
-				},
-				{
-					title: 'UNIDAD',
-					dataIndex: 'unidad',
-					key: 'unidad',
-				},
-				{
-					title: 'FECHA DE ENTREGA',
-					dataIndex: 'fechaDeEntrega',
-					key: 'fechaDeEntrega',
-				},
-				{
-					title: 'DESTINO',
-					dataIndex: 'destino',
-					key: 'destino',
-				},
-				{
-					title: 'ENTREGA',
-					dataIndex: 'entrega',
-					key: 'entrega',
-				},
-				{
-					title: 'TOTAL DISTANCIA KM',
-					dataIndex: 'totalDistancia',
-					key: 'totalDistancia',
-					render: (text) => (
-						<InputNumber
-							value={text}
-							style={{ width: '75px' }}
-							disabled
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-						/>
-					),
-				},
-				{
-					title: 'GRUPO',
-					dataIndex: 'grupo',
-					key: 'grupo',
-				},
-				{
-					title: 'DIAS',
-					dataIndex: 'dias',
-					key: 'dias',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '50px' }}
-							defaultValue={this.dias(record.totalDistancia, record.key)}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'dias')}
-						/>
-					),
-				},
-				{
-					title: 'PRECIO',
-					dataIndex: 'precio',
-					key: 'precio',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '100%' }}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'precio')}
-						/>
-					),
-				},
-				{
-					title: 'DIESEL',
-					dataIndex: 'disel',
-					key: 'disel',
-					render: (text, record) => (
-						<InputNumber
-							defaultValue={this.disel(record)}
-							style={{ width: '75px' }}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) =>
-								this.handleChange(record.key, value, 'diselChange')
-							}
-						/>
-					),
-				},
-				{
-					title: 'TOTAL DE CASETAS',
-					dataIndex: 'totalDeCasetas',
-					key: 'totalDeCasetas',
-					render: (text, record) => (
-						<InputNumber
-							value={text}
-							style={{ width: '70px' }}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) =>
-								this.handleChange(record.key, value, 'totalDeCasetas')
-							}
-						/>
-					),
-				},
-				{
-					title: 'ALIMENTOS',
-					dataIndex: 'alimentos',
-					key: 'alimentos',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '100%' }}
-							defaultValue={this.alimentos(record.totalDistancia, record.key)}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'alimentos')}
-						/>
-					),
-				},
-				{
-					title: 'TRANSITO',
-					dataIndex: 'transito',
-					key: 'transito',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '100%' }}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'transito')}
-						/>
-					),
-				},
-				{
-					title: 'MANIOBRAS',
-					dataIndex: 'maniobras',
-					key: 'maniobras',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '100%' }}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'maniobras')}
-						/>
-					),
-				},
-				{
-					title: 'COMISION',
-					dataIndex: 'comision',
-					key: 'comision',
-					render: (text, record) => (
-						<InputNumber
-							style={{ width: '100%' }}
-							defaultValue={this.comision(record)}
-							formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-							onChange={(value) => this.handleChange(record.key, value, 'comision')}
-						/>
-					),
-				},
-				{
-					title: 'APP',
-					dataIndex: 'app',
-					key: 'app',
-				},
-			];
-			consultaViajes().then((response) => {
-				let viajes = response.payload;
-				if (response.headerResponse.code === 404) {
-					viajes = [];
-					this.setState({
-						columns,
-						data: viajes,
-						loading: false,
-					});
-				} else {
-					viajes.map((item, index) => {
-						consultaTramos(item.id).then((response) => {
-							const tram = [];
-							if (Array.isArray(response.payload)) {
-								response.payload.map((item, index) => {
-									tram.push({
-										key: 'T' + item.id,
-										indexRoute: item.tramo,
-										fecha: item.fecha,
-										origen: item.origen,
-										destino: item.destino,
-										entrega: item.entrega,
-										casetas: item.casetas,
-										distancia: item.distancia,
-									});
-									return item;
-								});
-							}
-							data.push({
-								key: item.id,
-								baseDeOperaciones: item.base_operaciones,
-								cliente: item.cliente,
-								destino: item.destino,
-								entrega: item.ruta,
-								fechaDeCarga: item.fecha_carga,
-								fechaDeEntrega: item.fechaEntregaTemporal,
-								unidad: item.unidad,
-								operador: item.operador,
-								disel: item.diesel,
-								totalDeCasetas: item.casetas,
-								totalDistancia: parseFloat(item.distancia).toFixed(2),
-								grupo: this.grupo(item.distancia),
-								tramos: tram,
-								app: this.estatus(item.estatusOperador),
-								appEstatus: item.estatusOperador,
-								precio: 0,
-								transito: 0,
-								maniobras: 0,
-							});
-							this.setState({
-								columns,
-								data,
-								loading: false,
-							});
-							return tram;
-						});
-						return item;
-					});
-				}
+				columns,
+				data: viajes,
+				loading: false,
 			});
 		});
 	};
+
 	onSelectChange = (selectedRowKeys) => {
 		const { data } = this.state;
 		let mod = false,
@@ -531,6 +583,7 @@ class Confirmacion extends Component {
 			}
 		});
 	};
+
 	render() {
 		const { data, columns, loading, selectedRowKeys } = this.state;
 		const hasSelected = selectedRowKeys.length > 0;
