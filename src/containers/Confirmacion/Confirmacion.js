@@ -35,6 +35,7 @@ class Confirmacion extends Component {
 		idKey: '',
 		tipoViaje: [],
 		selectedRowKeys: [],
+		empresa: '',
 	};
 	/* 	dias = (distancia, id) => {
 		const { tipoViaje, data } = this.state;
@@ -53,9 +54,9 @@ class Confirmacion extends Component {
 		});
 		return dias;
 	};
-	disel = (record) => {
+	diesel = (record) => {
 		const { tipoViaje, data } = this.state;
-		let disel,
+		let diesel,
 			tipo = 'Loc';
 		if (record.totalDistancia > 150) tipo = 'For';
 		tipoViaje.map((tipos) => {
@@ -63,20 +64,20 @@ class Confirmacion extends Component {
 				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
 				record.totalDistancia + 1 - 1 > tipos.kmsIni
 			) {
-				disel =
+				diesel =
 					(record.totalDistancia /
 						tipos[record.unidad.slice(0, record.unidad.search('-')) + '_Rend' + tipo]) *
-					record.disel;
+					record.diesel;
 			}
 			return tipos;
 		});
 		data.map((viaje) => {
 			if (record.key === viaje.key) {
-				viaje['diselD'] = parseFloat(disel).toFixed(2);
+				viaje['dieselD'] = parseFloat(diesel).toFixed(2);
 			}
 			return viaje;
 		});
-		return parseFloat(disel).toFixed(2);
+		return parseFloat(diesel).toFixed(2);
 	};
 	comision = (record) => {
 		const { tipoViaje, data } = this.state;
@@ -273,6 +274,7 @@ class Confirmacion extends Component {
 				key: 'precio',
 				render: (text, record) => (
 					<InputNumber
+						defaultValue={text}
 						style={{ width: '80px' }}
 						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						onChange={(value) => this.handleChange(record.key, value, 'precio')}
@@ -303,6 +305,7 @@ class Confirmacion extends Component {
 						key: 'diesel',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -314,32 +317,34 @@ class Confirmacion extends Component {
 
 					{
 						title: 'CASETAS',
-						dataIndex: 'total_casetas',
-						key: 'total_casetas',
+						dataIndex: 'casetas',
+						key: 'casetas',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
 								onChange={(value) =>
-									this.handleChange(record.key, value, 'total_casetas')
+									this.handleChange(record.key, value, 'casetas')
 								}
 							/>
 						),
 					},
 					{
 						title: 'VIATICOS',
-						dataIndex: 'alimentos',
-						key: 'alimentos',
+						dataIndex: 'viaticos',
+						key: 'viaticos',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
 								onChange={(value) =>
-									this.handleChange(record.key, value, 'alimentos')
+									this.handleChange(record.key, value, 'viaticos')
 								}
 							/>
 						),
@@ -383,6 +388,7 @@ class Confirmacion extends Component {
 						key: 'comision',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -399,6 +405,7 @@ class Confirmacion extends Component {
 						key: 'maniobras',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -415,6 +422,7 @@ class Confirmacion extends Component {
 						key: 'custodia',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -431,6 +439,7 @@ class Confirmacion extends Component {
 						key: 'externo',
 						render: (text, record) => (
 							<InputNumber
+								defaultValue={text}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -447,13 +456,20 @@ class Confirmacion extends Component {
 						key: 'total_gasto',
 						render: (text, record) => (
 							<InputNumber
+								value={
+									parseInt(record.diesel ? record.diesel : 0) +
+									parseInt(record.casetas ? record.casetas : 0) +
+									parseInt(record.viaticos ? record.viaticos : 0) +
+									parseInt(record.comision ? record.comision : 0) +
+									parseInt(record.maniobras ? record.maniobras : 0) +
+									parseInt(record.custodia ? record.custodia : 0) +
+									parseInt(record.externo ? record.externo : 0)
+								}
 								style={{ width: '80px' }}
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'total_gasto')
-								}
+								disabled
 							/>
 						),
 					},
@@ -481,18 +497,33 @@ class Confirmacion extends Component {
 		let mod = false,
 			id,
 			operador,
-			cliente;
+			cliente,
+			title,
+			empresa,
+			titleOperador = '',
+			titleEmpresa = '';
 		const selectItems = selectedRowKeys.filter((item) => {
 			let re = false;
 			data.map((element) => {
 				if (element.key === item) {
-					if (element.appEstatus === 'Aprobado') {
+					if (
+						element.estatus_operador === 'Aprobado' &&
+						element.estatus_empresa === 'Confirmado'
+					) {
 						re = true;
 					} else {
 						mod = true;
 						id = item;
 						operador = element.operador;
 						cliente = element.cliente;
+						empresa = element.empresa;
+						if (element.estatus_operador !== 'Aprobado') {
+							titleOperador = ` -El conductor ${operador} `;
+						}
+						if (element.estatus_empresa !== 'Confirmado') {
+							titleEmpresa = ` -La empresa ${empresa} `;
+						}
+						title = `Los estatus de ${titleOperador}${titleEmpresa} no ha aceptado el viaje del cliente ${cliente}. ¿Quieres continuar?`;
 					}
 				}
 				return element;
@@ -501,12 +532,13 @@ class Confirmacion extends Component {
 		});
 		if (mod) {
 			confirm({
-				title: `El conductor ${operador} no ha aceptado el viaje del cliente ${cliente}. ¿Quieres continuar?`,
+				title,
 				icon: <ExclamationCircleOutlined />,
 				okText: 'Si',
 				cancelText: 'No',
 				onOk: () => {
-					this.handleChange(id, 'Aprobado', 'appEstatus');
+					this.handleChange(id, 'Aprobado', 'estatus_operador');
+					this.handleChange(id, 'Confirmado', 'estatus_empresa');
 					/* this.handleChange(id, this.estatus('Aprobado'), 'app'); */
 					this.onSelectChange(selectedRowKeys);
 				},
@@ -527,37 +559,44 @@ class Confirmacion extends Component {
 					request.push({
 						idViaje: element.key,
 						precio: element.precio,
-						dias: element.dias ? element.dias : element.diasD,
 						gastos: [
 							{
 								tipo: 'Diesel',
-								presupuesto: element.diselChange
-									? element.diselChange
-									: element.diselD,
+								presupuesto: element.diesel ? element.diesel : 0,
 							},
 							{
 								tipo: 'Casetas',
-								presupuesto: element.totalDeCasetas,
+								presupuesto: element.diesel ? element.diesel : 0,
 							},
 							{
-								tipo: 'Alimentos',
-								presupuesto: element.alimentos
-									? element.alimentos
-									: element.alimentosD,
+								tipo: 'Viaticos',
+								presupuesto: element.viaticos ? element.viaticos : 0,
 							},
 							{
 								tipo: 'Comision',
-								presupuesto: element.comisionD,
+								presupuesto: element.comision ? element.comision : 0,
 							},
-							{ tipo: 'Transito', presupuesto: element.transito },
-							{ tipo: 'Maniobras', presupuesto: element.maniobras },
+
+							{
+								tipo: 'Maniobras',
+								presupuesto: element.maniobras ? element.maniobras : 0,
+							},
+							{
+								tipo: 'Custodia',
+								presupuesto: element.custodia ? element.custodia : 0,
+							},
+							{
+								tipo: 'Externo',
+								presupuesto: element.externo ? element.externo : 0,
+							},
 						],
-						disel: element.diselChange ? element.diselChange : element.diselD,
-						casetas: element.totalDeCasetas,
-						alimentos: element.alimentos ? element.alimentos : element.alimentosD,
-						comision: element.comisionD,
-						transito: element.transito,
-						maniobras: element.maniobras,
+						diesel: element.diesel ? element.diesel : 0,
+						casetas: element.casetas ? element.casetas : 0,
+						comision: element.comision ? element.comision : 0,
+						viaticos: element.viaticos ? element.viaticos : 0,
+						maniobras: element.maniobras ? element.maniobras : 0,
+						custodia: element.custodia ? element.custodia : 0,
+						externo: element.externo ? element.externo : 0,
 						direccion_cliente: element.tramos[0].entrega,
 					});
 				}
@@ -565,6 +604,7 @@ class Confirmacion extends Component {
 			});
 			return item;
 		});
+		console.log(request);
 		confirmaViaje(request).then((response) => {
 			if (response.headerResponse.code === 400) {
 				message.error('No puedes mandar campos vacios ' + response.payload.Faltantes);
