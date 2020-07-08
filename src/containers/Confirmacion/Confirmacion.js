@@ -566,7 +566,7 @@ class Confirmacion extends Component {
 							},
 							{
 								tipo: 'Casetas',
-								presupuesto: element.diesel ? element.diesel : 0,
+								presupuesto: element.casetas ? element.casetas : 0,
 							},
 							{
 								tipo: 'Viaticos',
@@ -597,7 +597,6 @@ class Confirmacion extends Component {
 						maniobras: element.maniobras ? element.maniobras : 0,
 						custodia: element.custodia ? element.custodia : 0,
 						externo: element.externo ? element.externo : 0,
-						direccion_cliente: element.tramos[0].entrega,
 					});
 				}
 				return element;
