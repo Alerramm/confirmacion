@@ -1,5 +1,6 @@
-const BASE_CONFIRMATION_URL = 'http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/QA/';
-const BASE_CLIENT_URL = 'http://www.misistema.mx/beluga/Finanzas/endpoints/cuentas/QA/';
+const BASE_CONFIRMATION_URL =
+	'http://www.misistema.mx/beluga/Finanzas/endpoints/confirmacion/develop/';
+const BASE_CLIENT_URL = 'http://www.misistema.mx/beluga/Finanzas/endpoints/cuentas/develop/';
 
 /** CONSULTA CLIENTES */
 export const CONSULTAR_VIAJES = BASE_CONFIRMATION_URL + 'get/viajes.php';
