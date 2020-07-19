@@ -1,7 +1,7 @@
 {
 	"apps": [
 		{
-			"name": "confirmacionQA",
+			"name": "confirmacion",
 			"cwd": "./src/",
 			"script": "npm",
 			"args": "run start"
