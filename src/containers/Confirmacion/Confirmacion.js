@@ -10,6 +10,8 @@ import {
 	Modal,
 	Tag,
 	Typography,
+	Menu,
+	Select,
 } from 'antd';
 import {
 	consultaViajes,
@@ -17,10 +19,11 @@ import {
 	consultaTipoViajes,
 	confirmaViaje,
 } from './ConfirmacionActions';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 const { confirm } = Modal;
 const { Title } = Typography;
+const { Option } = Select;
 
 class Confirmacion extends Component {
 	state = {
@@ -37,98 +40,6 @@ class Confirmacion extends Component {
 		selectedRowKeys: [],
 		empresa: '',
 	};
-	/* 	dias = (distancia, id) => {
-		const { tipoViaje, data } = this.state;
-		let dias;
-		tipoViaje.map((tipos) => {
-			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
-				dias = tipos.numDias;
-			}
-			return tipos;
-		});
-		data.map((viaje) => {
-			if (id === viaje.key) {
-				viaje['diasD'] = dias;
-			}
-			return viaje;
-		});
-		return dias;
-	};
-	diesel = (record) => {
-		const { tipoViaje, data } = this.state;
-		let diesel,
-			tipo = 'Loc';
-		if (record.totalDistancia > 150) tipo = 'For';
-		tipoViaje.map((tipos) => {
-			if (
-				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
-				record.totalDistancia + 1 - 1 > tipos.kmsIni
-			) {
-				diesel =
-					(record.totalDistancia /
-						tipos[record.unidad.slice(0, record.unidad.search('-')) + '_Rend' + tipo]) *
-					record.diesel;
-			}
-			return tipos;
-		});
-		data.map((viaje) => {
-			if (record.key === viaje.key) {
-				viaje['dieselD'] = parseFloat(diesel).toFixed(2);
-			}
-			return viaje;
-		});
-		return parseFloat(diesel).toFixed(2);
-	};
-	comision = (record) => {
-		const { tipoViaje, data } = this.state;
-		let comision;
-		tipoViaje.map((tipos) => {
-			if (
-				record.totalDistancia + 1 - 1 < tipos.kmsFin &&
-				record.totalDistancia + 1 - 1 > tipos.kmsIni
-			) {
-				comision = tipos[record.unidad.slice(0, record.unidad.search('-')) + '_comision'];
-			}
-			return tipos;
-		});
-		data.map((viaje) => {
-			if (record.key === viaje.key) {
-				viaje['comisionD'] = parseFloat(comision).toFixed(2);
-			}
-			return viaje;
-		});
-		return parseFloat(comision).toFixed(2);
-	};
-	alimentos = (distancia, id) => {
-		const { tipoViaje, data } = this.state;
-		let alimentos;
-		tipoViaje.map((tipos) => {
-			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
-				alimentos = tipos.viaticos;
-			}
-			return tipos;
-		});
-		data.map((viaje) => {
-			if (id === viaje.key) {
-				viaje['alimentosD'] = alimentos;
-			}
-			return viaje;
-		});
-		return alimentos;
-	};
-	grupo = (distancia) => {
-		const { tipoViaje } = this.state;
-		let grupo;
-
-		tipoViaje.map((tipos) => {
-			if (distancia + 1 - 1 < tipos.kmsFin && distancia + 1 - 1 > tipos.kmsIni) {
-				grupo = tipos.descripcion;
-			}
-			return tipos;
-		});
-		return grupo;
-	};
- */
 	//ok
 	handleChange = (id, value, columna) => {
 		const { data } = this.state;
@@ -171,13 +82,52 @@ class Confirmacion extends Component {
 		const columns = [
 			{ title: 'Id', dataIndex: 'id', key: 'id' },
 			{ title: 'Numero Tramo', dataIndex: 'tramo', key: 'tramo' },
-			{ title: 'Fecha', dataIndex: 'fecha_tramo', key: 'fecha_tramo' },
+			{
+				title: 'Fecha',
+				dataIndex: 'fecha_tramo',
+				key: 'fecha_tramo',
+				render: (record) => {
+					return this.diaSemana(record) + ' ' + record;
+				},
+			},
 			{ title: 'Destino', dataIndex: 'destino_tramo', key: 'destino_tramo' },
 			{ title: 'Entrega', dataIndex: 'entrega_tramo', key: 'entrega_tramo' },
 			{ title: 'Distancia', dataIndex: 'distancia_tramo', key: 'distancia_tramo' },
 			{ title: 'Casetas', dataIndex: 'casetas_tramo', key: 'casetas_tramo' },
 		];
 		return <Table columns={columns} dataSource={record.tramos} pagination={false} />;
+	};
+	menu = (arreglo, tipo) => {
+		let botones = arreglo.map((element) => {
+			let key;
+			switch (tipo) {
+				case 'empresa':
+					key = element.key + 'e';
+					break;
+				case 'camion':
+					key = element.key + 'c';
+					break;
+				case 'operador':
+					key = element.key + 'o';
+					break;
+				default:
+					key = element.key;
+					break;
+			}
+			return (
+				<Option value={element.nombre} key={key}>
+					{element.nombre}
+				</Option>
+			);
+		});
+
+		return botones;
+	};
+
+	diaSemana = (record) => {
+		const fecha = new Date(record);
+		const dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
+		return dias[fecha.getUTCDay()];
 	};
 
 	//ok
@@ -209,7 +159,7 @@ class Confirmacion extends Component {
 				],
 			},
 			{
-				title: 'INFORMACION DE SOLICITUD',
+				title: 'INFORMACION DE CARGA',
 				children: [
 					{
 						title: 'CLIENTE',
@@ -225,6 +175,9 @@ class Confirmacion extends Component {
 						title: 'FECHA DE CARGA',
 						dataIndex: 'fecha_carga',
 						key: 'fecha_carga',
+						render: (record) => {
+							return this.diaSemana(record) + ' ' + record;
+						},
 					},
 				],
 			},
@@ -235,16 +188,41 @@ class Confirmacion extends Component {
 						title: 'EMPRESA',
 						dataIndex: 'empresa',
 						key: 'empresa',
+						render: (text, record) => (
+							<Select style={{ width: 80 }} defaultValue="Beluga" size="small">
+								{this.menu(text, 'empresa')}
+							</Select>
+						),
 					},
 					{
 						title: 'OPERADOR',
 						dataIndex: 'operador',
 						key: 'operador',
+						render: (text, record) => (
+							<Select style={{ width: 150 }} size="small">
+								{this.menu(text, 'operador')}
+							</Select>
+						),
+					},
+					{
+						title: 'TIPO DE ADECUACION',
+						dataIndex: 'unidad_tipo',
+						key: 'unidad_tipo',
+					},
+					{
+						title: 'TIPO DE UNIDAD',
+						dataIndex: 'unidad_modelo',
+						key: 'unidad_modelo',
 					},
 					{
 						title: 'UNIDAD',
 						dataIndex: 'unidad',
 						key: 'unidad',
+						render: (text, record) => (
+							<Select style={{ width: 100 }} size="small">
+								{this.menu(text, 'unidad')}
+							</Select>
+						),
 					},
 				],
 			},
@@ -265,6 +243,9 @@ class Confirmacion extends Component {
 						title: 'FECHA DE ENTREGA',
 						dataIndex: 'fecha_entrega',
 						key: 'fecha_entrega',
+						render: (record) => {
+							return this.diaSemana(record) + ' ' + record;
+						},
 					},
 				],
 			},
@@ -275,7 +256,11 @@ class Confirmacion extends Component {
 				render: (text, record) => (
 					<InputNumber
 						defaultValue={text}
-						style={{ width: '80px' }}
+						style={{
+							width: '80px',
+							background: '#DFF9D8',
+							color: 'green',
+						}}
 						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
 						onChange={(value) => this.handleChange(record.key, value, 'precio')}
 					/>
@@ -455,8 +440,8 @@ class Confirmacion extends Component {
 						dataIndex: 'total_gasto',
 						key: 'total_gasto',
 						render: (text, record) => (
-							<InputNumber
-								value={
+							<Tag color="red">
+								{(
 									parseInt(record.diesel ? record.diesel : 0) +
 									parseInt(record.casetas ? record.casetas : 0) +
 									parseInt(record.viaticos ? record.viaticos : 0) +
@@ -464,13 +449,10 @@ class Confirmacion extends Component {
 									parseInt(record.maniobras ? record.maniobras : 0) +
 									parseInt(record.custodia ? record.custodia : 0) +
 									parseInt(record.externo ? record.externo : 0)
-								}
-								style={{ width: '80px' }}
-								formatter={(value) =>
-									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-								}
-								disabled
-							/>
+								)
+									.toString()
+									.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+							</Tag>
 						),
 					},
 					{
