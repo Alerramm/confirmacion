@@ -18,6 +18,7 @@ import {
 	consultaTramos,
 	consultaTipoViajes,
 	confirmaViaje,
+	modificarOperador,
 } from './ConfirmacionActions';
 import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
 const { Content } = Layout;
@@ -97,7 +98,7 @@ class Confirmacion extends Component {
 		];
 		return <Table columns={columns} dataSource={record.tramos} pagination={false} />;
 	};
-	menu = (arreglo, tipo) => {
+	menu = (viaje, arreglo, tipo) => {
 		let botones = arreglo.map((element) => {
 			let key;
 			switch (tipo) {
@@ -115,7 +116,7 @@ class Confirmacion extends Component {
 					break;
 			}
 			return (
-				<Option value={element.nombre} key={key}>
+				<Option value={element.nombre} name={viaje.key} key={key}>
 					{element.nombre}
 				</Option>
 			);
@@ -128,6 +129,48 @@ class Confirmacion extends Component {
 		const fecha = new Date(record);
 		const dias = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 		return dias[fecha.getUTCDay()];
+	};
+
+	handleChangeEmpresa = (record, text, value) => {};
+	handleChangeOperador = (record, text, value) => {
+		this.setState({
+			loading: true,
+		});
+
+		modificarOperador([
+			{
+				idViaje: text.props.name,
+				estatusApp: 'Pendiente',
+				estatus: 'Confirmado',
+				operador: record,
+				unidad: '',
+			},
+		]).then((response) => {
+			let viajes = response.payload;
+			this.setState({
+				loading: false,
+			});
+		});
+	};
+	handleChangeUnidad = (record, text, value) => {
+		this.setState({
+			loading: true,
+		});
+
+		modificarOperador([
+			{
+				idViaje: text.props.name,
+				estatusApp: 'Pendiente',
+				estatus: 'Confirmado',
+				unidad: record,
+				operador: '',
+			},
+		]).then((response) => {
+			let viajes = response.payload;
+			this.setState({
+				loading: false,
+			});
+		});
 	};
 
 	//ok
@@ -188,9 +231,14 @@ class Confirmacion extends Component {
 						title: 'EMPRESA',
 						dataIndex: 'empresa',
 						key: 'empresa',
-						render: (text, record) => (
-							<Select style={{ width: 80 }} defaultValue="Beluga" size="small">
-								{this.menu(text, 'empresa')}
+						render: (record, text, x) => (
+							<Select
+								style={{ width: 80 }}
+								onChange={this.handleChangeEmpresa}
+								defaultValue="Beluga"
+								size="small"
+							>
+								{this.menu(text, record, 'empresa')}
 							</Select>
 						),
 					},
@@ -198,9 +246,13 @@ class Confirmacion extends Component {
 						title: 'OPERADOR',
 						dataIndex: 'operador',
 						key: 'operador',
-						render: (text, record) => (
-							<Select style={{ width: 150 }} size="small">
-								{this.menu(text, 'operador')}
+						render: (record, text, x) => (
+							<Select
+								style={{ width: 150 }}
+								onChange={this.handleChangeOperador}
+								size="small"
+							>
+								{this.menu(text, record, 'operador')}
 							</Select>
 						),
 					},
@@ -218,9 +270,13 @@ class Confirmacion extends Component {
 						title: 'UNIDAD',
 						dataIndex: 'unidad',
 						key: 'unidad',
-						render: (text, record) => (
-							<Select style={{ width: 100 }} size="small">
-								{this.menu(text, 'unidad')}
+						render: (record, text, x) => (
+							<Select
+								style={{ width: 100 }}
+								onChange={this.handleChangeUnidad}
+								size="small"
+							>
+								{this.menu(text, record, 'unidad')}
 							</Select>
 						),
 					},
@@ -496,16 +552,9 @@ class Confirmacion extends Component {
 					} else {
 						mod = true;
 						id = item;
-						operador = element.operador;
 						cliente = element.cliente;
-						empresa = element.empresa;
-						if (element.estatus_operador !== 'Aprobado') {
-							titleOperador = ` -El conductor ${operador} `;
-						}
-						if (element.estatus_empresa !== 'Confirmado') {
-							titleEmpresa = ` -La empresa ${empresa} `;
-						}
-						title = `Los estatus de ${titleOperador}${titleEmpresa} no ha aceptado el viaje del cliente ${cliente}. ¿Quieres continuar?`;
+						console.log(element.operador);
+						title = `El operador no ha aceptado el viaje con id ${element.key} del cliente ${cliente}. ¿Quieres continuar?`;
 					}
 				}
 				return element;
