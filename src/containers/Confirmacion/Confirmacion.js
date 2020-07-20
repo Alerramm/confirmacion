@@ -140,7 +140,7 @@ class Confirmacion extends Component {
 		modificarOperador([
 			{
 				idViaje: text.props.name,
-				estatusApp: 'Pendiente',
+				estatus_app: 'Pendiente',
 				estatus: 'Confirmado',
 				operador: record,
 				unidad: '',
@@ -160,7 +160,7 @@ class Confirmacion extends Component {
 		modificarOperador([
 			{
 				idViaje: text.props.name,
-				estatusApp: 'Pendiente',
+				estatus_app: 'Pendiente',
 				estatus: 'Confirmado',
 				unidad: record,
 				operador: '',
