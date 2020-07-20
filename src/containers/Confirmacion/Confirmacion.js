@@ -250,6 +250,7 @@ class Confirmacion extends Component {
 							<Select
 								style={{ width: 150 }}
 								onChange={this.handleChangeOperador}
+								defaultValue={text.operadorSeleccionado}
 								size="small"
 							>
 								{this.menu(text, record, 'operador')}
@@ -275,6 +276,7 @@ class Confirmacion extends Component {
 								style={{ width: 100 }}
 								onChange={this.handleChangeUnidad}
 								size="small"
+								defaultValue={text.unidadSeleccionada}
 							>
 								{this.menu(text, record, 'unidad')}
 							</Select>
