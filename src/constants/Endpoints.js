@@ -11,3 +11,5 @@ export const ACTUALIZA_ESTATUS_FACTURAS = BASE_CLIENT_URL + 'put/abonar.php';
 export const CONSULTAR_TIPO_VIAJES = BASE_CONFIRMATION_URL + 'get/tipoViaje.php';
 /** CONFIRMACION DE VIAJE */
 export const CONFIRMACION_VIAJE = BASE_CONFIRMATION_URL + 'post/confirmar.php';
+/** ACTUALIZA OPERADOR */
+export const MODIFY_OPERADOR = BASE_CONFIRMATION_URL + 'post/modifyStatusTravel.php';
