@@ -273,7 +273,7 @@ class Confirmacion extends Component {
 						key: 'unidad',
 						render: (record, text, x) => (
 							<Select
-								style={{ width: 120 }}
+								style={{ width: 150 }}
 								onChange={this.handleChangeUnidad}
 								size="small"
 								defaultValue={text.unidadSeleccionada}
