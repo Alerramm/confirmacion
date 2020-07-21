@@ -343,6 +343,16 @@ class Confirmacion extends Component {
 							),
 						}, */
 					{
+						title: 'KILOMETRAJE',
+						dataIndex: 'kilometraje',
+						key: 'kilometraje',
+					},
+					{
+						title: 'RENDIMIENTO',
+						dataIndex: 'rendimiento',
+						key: 'rendimiento',
+					},
+					{
 						title: 'DIESEL',
 						dataIndex: 'diesel',
 						key: 'diesel',
