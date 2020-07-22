@@ -1,26 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import {
-	Layout,
-	Table,
-	InputNumber,
-	Badge,
-	Dropdown,
-	Button,
-	message,
-	Modal,
-	Tag,
-	Typography,
-	Menu,
-	Select,
-} from 'antd';
-import {
-	consultaViajes,
-	consultaTramos,
-	consultaTipoViajes,
-	confirmaViaje,
-	modificarOperador,
-} from './ConfirmacionActions';
-import { ExclamationCircleOutlined, DownOutlined } from '@ant-design/icons';
+import { Layout, Table, InputNumber, Button, message, Modal, Tag, Typography, Select } from 'antd';
+import { consultaViajes, confirmaViaje, modificarOperador } from './ConfirmacionActions';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 const { confirm } = Modal;
 const { Title } = Typography;
@@ -146,7 +127,6 @@ class Confirmacion extends Component {
 				unidad: '',
 			},
 		]).then((response) => {
-			let viajes = response.payload;
 			this.setState({
 				loading: false,
 			});
@@ -166,13 +146,53 @@ class Confirmacion extends Component {
 				operador: '',
 			},
 		]).then((response) => {
-			let viajes = response.payload;
 			this.setState({
 				loading: false,
 			});
 		});
 	};
 
+	handleCancelarViaje = (record) => {
+		this.setState({
+			loading: true,
+		});
+
+		modificarOperador([
+			{
+				idViaje: record.idViaje,
+				estatus_app: record.estatus_operador,
+				estatus: 'Cancelado',
+				unidad: record.unidadSeleccionada,
+				operador: record.operadorSeleccionado,
+			},
+		]).then((response) => {
+			const { data } = this.state;
+			if (response.headerResponse.code === 200) {
+				this.setState({
+					data: data.filter((element) => element.idViaje != record.idViaje),
+				});
+			}
+
+			this.setState({
+				loading: false,
+			});
+		});
+	};
+
+	cancelarViaje = (record) => {
+		confirm({
+			title: `¿Seguro que deseas cancelar el viaje con id ${record.idViaje}`,
+			icon: <ExclamationCircleOutlined />,
+			okText: 'Si',
+			cancelText: 'No',
+			onOk: () => {
+				this.handleCancelarViaje(record);
+			},
+			onCancel() {
+				console.log('Cancel');
+			},
+		});
+	};
 	//ok
 	componentDidMount = () => {
 		this.setState({
@@ -327,21 +347,6 @@ class Confirmacion extends Component {
 			{
 				title: 'INFORMACION DE GASTOS',
 				children: [
-					/* {
-							title: 'TOTAL DISTANCIA KM',
-							dataIndex: 'totalDistancia',
-							key: 'totalDistancia',
-							render: (text) => (
-								<InputNumber
-									value={text}
-									style={{ width: '75px' }}
-									disabled
-									formatter={(value) =>
-										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-									}
-								/>
-							),
-						}, */
 					{
 						title: 'KILOMETRAJE',
 						dataIndex: 'kilometraje',
@@ -402,39 +407,6 @@ class Confirmacion extends Component {
 							/>
 						),
 					},
-					/* {
-							title: 'TRANSITO',
-							dataIndex: 'transito',
-							key: 'transito',
-							render: (text, record) => (
-								<InputNumber
-									style={{ width: '100%' }}
-									formatter={(value) =>
-										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-									}
-									onChange={(value) =>
-										this.handleChange(record.key, value, 'transito')
-									}
-								/>
-							),
-						},
-						{
-							title: 'DIAS',
-							dataIndex: 'dias',
-							key: 'dias',
-							render: (text, record) => (
-								<InputNumber
-									style={{ width: '50px' }}
-									defaultValue={this.dias(record.totalDistancia, record.key)}
-									formatter={(value) =>
-										`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-									}
-									onChange={(value) =>
-										this.handleChange(record.key, value, 'dias')
-									}
-								/>
-							),
-						}, */
 					{
 						title: 'COMISION',
 						dataIndex: 'comision',
@@ -529,6 +501,16 @@ class Confirmacion extends Component {
 						key: 'porcentaje_gasto',
 						render: (text, record) => <Title level={4}>{text}%</Title>,
 					},
+					{
+						title: 'CANCELAR',
+						dataIndex: 'cancelar',
+						key: 'cancelar',
+						render: (text, record, x) => (
+							<Button type="danger" onClick={() => this.cancelarViaje(record)}>
+								Cancelar
+							</Button>
+						),
+					},
 				],
 			},
 		];
@@ -546,12 +528,8 @@ class Confirmacion extends Component {
 		const { data } = this.state;
 		let mod = false,
 			id,
-			operador,
 			cliente,
-			title,
-			empresa,
-			titleOperador = '',
-			titleEmpresa = '';
+			title;
 		const selectItems = selectedRowKeys.filter((item) => {
 			let re = false;
 			data.map((element) => {
@@ -582,7 +560,6 @@ class Confirmacion extends Component {
 				onOk: () => {
 					this.handleChange(id, 'Aprobado', 'estatus_operador');
 					this.handleChange(id, 'Confirmado', 'estatus_empresa');
-					/* this.handleChange(id, this.estatus('Aprobado'), 'app'); */
 					this.onSelectChange(selectedRowKeys);
 				},
 				onCancel() {
