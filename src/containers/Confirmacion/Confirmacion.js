@@ -43,7 +43,7 @@ class Confirmacion extends Component {
 					data: data.map((element) => {
 						if (element.idViaje === idViaje) {
 							element.rendimiento = response.payload.Rendimiento;
-							element.diesel = diesel;
+							element['diesel'] = diesel.replace(/,/g, '');
 						}
 						return element;
 					}),
@@ -528,9 +528,7 @@ class Confirmacion extends Component {
 									parseInt(record.maniobras ? record.maniobras : 0) +
 									parseInt(record.custodia ? record.custodia : 0) +
 									parseInt(record.externo ? record.externo : 0)
-								)
-									.toString()
-									.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+								).toString()}
 							</Tag>
 						),
 					},
