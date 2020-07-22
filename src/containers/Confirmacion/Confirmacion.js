@@ -1,6 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { Layout, Table, InputNumber, Button, message, Modal, Tag, Typography, Select } from 'antd';
-import { consultaViajes, confirmaViaje, modificarOperador } from './ConfirmacionActions';
+import {
+	consultaViajes,
+	confirmaViaje,
+	modificarOperador,
+	modificarDiesel,
+} from './ConfirmacionActions';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 const { confirm } = Modal;
@@ -22,11 +27,42 @@ class Confirmacion extends Component {
 		selectedRowKeys: [],
 		empresa: '',
 	};
+
+	handleChangeDiesel = (idViaje, diesel) => {
+		this.setState({
+			loading: true,
+		});
+
+		modificarDiesel({
+			idViaje,
+			diesel,
+		}).then((response) => {
+			const { data } = this.state;
+			if (response.headerResponse.code == 200) {
+				this.setState({
+					data: data.map((element) => {
+						if (element.idViaje === idViaje) {
+							element.rendimiento = response.payload.Rendimiento;
+						}
+						return element;
+					}),
+				});
+			}
+			this.setState({
+				data,
+				loading: false,
+			});
+		});
+	};
+
 	//ok
 	handleChange = (id, value, columna) => {
 		const { data } = this.state;
 		data.map((viaje) => {
 			if (id === viaje.key) {
+				if (columna == 'diesel') {
+					this.handleChangeDiesel(id, value);
+				}
 				viaje[columna] = value;
 			}
 			return viaje;
@@ -368,7 +404,9 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) => this.handleChange(record.key, value, 'diesel')}
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'diesel')
+								}
 							/>
 						),
 					},
