@@ -43,6 +43,7 @@ class Confirmacion extends Component {
 					data: data.map((element) => {
 						if (element.idViaje === idViaje) {
 							element.rendimiento = response.payload.Rendimiento;
+							element.diesel = diesel;
 						}
 						return element;
 					}),
