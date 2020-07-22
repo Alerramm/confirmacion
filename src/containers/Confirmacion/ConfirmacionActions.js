@@ -5,6 +5,7 @@ import {
 	CONSULTAR_TIPO_VIAJES,
 	CONFIRMACION_VIAJE,
 	MODIFY_OPERADOR,
+	RENDIMIENTO,
 } from '../../constants/Endpoints';
 
 export const consultaTipoViajes = async () => {
@@ -44,6 +45,15 @@ export const confirmaViaje = async (data) => {
 export const modificarOperador = async (data) => {
 	const queryView = {
 		endpoint: MODIFY_OPERADOR,
+		method: 'POST',
+		data,
+	};
+	return cuentasApiPut(queryView);
+};
+
+export const modificarDiesel = async (data) => {
+	const queryView = {
+		endpoint: RENDIMIENTO,
 		method: 'POST',
 		data,
 	};
