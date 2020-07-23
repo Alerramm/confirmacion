@@ -46,42 +46,41 @@ class Confirmacion extends Component {
 								presupuesto: diesel,
 							}).then((response) => {
 								if (response.headerResponse.code == 200) {
-									element['diesel'] = diesel.replace(/,/g, '');
+									//
 								}
 							});
+							element['diesel'] = diesel.replace(/,/g, '');
 						}
 						return element;
 					}),
 				});
 			}
-			this.setState({
-				data,
-			});
 		});
 	};
 
 	//ok
 	handleChange = (id, value, columna) => {
 		const { data } = this.state;
-		data.map((viaje) => {
-			if (id === viaje.key) {
-				if (columna == 'diesel') {
-					this.handleChangeDiesel(id, value);
-				}
-				modificarGasto({
-					idViaje: id,
-					TipoGasto: columna[0].toUpperCase() + columna.slice(1),
-					presupuesto: value,
-				}).then((response) => {
-					if (response.headerResponse.code == 200) {
-						viaje[columna] = value;
-					}
-				});
-			}
-			return viaje;
-		});
 		this.setState({
-			data,
+			data: data.map((viaje) => {
+				if (id === viaje.key) {
+					if (columna == 'diesel') {
+						this.handleChangeDiesel(id, value);
+					} else {
+						modificarGasto({
+							idViaje: id,
+							TipoGasto: columna[0].toUpperCase() + columna.slice(1),
+							presupuesto: value,
+						}).then((response) => {
+							if (response.headerResponse.code == 200) {
+								//
+							}
+						});
+					}
+					viaje[columna] = value.replace(/,/g, '');
+				}
+				return viaje;
+			}),
 		});
 	};
 
