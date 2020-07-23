@@ -46,7 +46,7 @@ class Confirmacion extends Component {
 								presupuesto: diesel,
 							}).then((response) => {
 								if (response.headerResponse.code == 200) {
-									//
+									//aqui va si e modifico dato en la base de datos
 								}
 							});
 							element['diesel'] = diesel.replace(/,/g, '');
@@ -67,17 +67,21 @@ class Confirmacion extends Component {
 					if (columna == 'diesel') {
 						this.handleChangeDiesel(id, value);
 					} else {
-						modificarGasto({
-							idViaje: id,
-							TipoGasto: columna[0].toUpperCase() + columna.slice(1),
-							presupuesto: value,
-						}).then((response) => {
-							if (response.headerResponse.code == 200) {
-								//
-							}
-						});
+						if (columna == 'precio') {
+							//aqui va endpoint de precio
+						} else {
+							modificarGasto({
+								idViaje: id,
+								TipoGasto: columna[0].toUpperCase() + columna.slice(1),
+								presupuesto: value,
+							}).then((response) => {
+								if (response.headerResponse.code == 200) {
+									//aqui va si se modifico gasto en la base de datos
+								}
+							});
+						}
 					}
-					viaje[columna] = value.replace(/,/g, '');
+					viaje[columna] = value.toString().replace(/,/g, '');
 				}
 				return viaje;
 			}),
