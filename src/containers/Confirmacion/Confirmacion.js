@@ -5,6 +5,7 @@ import {
 	confirmaViaje,
 	modificarOperador,
 	modificarDiesel,
+	modificarGasto,
 } from './ConfirmacionActions';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Content } = Layout;
@@ -29,10 +30,6 @@ class Confirmacion extends Component {
 	};
 
 	handleChangeDiesel = (idViaje, diesel) => {
-		this.setState({
-			loading: true,
-		});
-
 		modificarDiesel({
 			idViaje,
 			diesel,
@@ -43,7 +40,15 @@ class Confirmacion extends Component {
 					data: data.map((element) => {
 						if (element.idViaje === idViaje) {
 							element.rendimiento = response.payload.Rendimiento;
-							element['diesel'] = diesel.replace(/,/g, '');
+							modificarGasto({
+								idViaje,
+								TipoGasto: 'Diesel',
+								presupuesto: diesel,
+							}).then((response) => {
+								if (response.headerResponse.code == 200) {
+									element['diesel'] = diesel.replace(/,/g, '');
+								}
+							});
 						}
 						return element;
 					}),
@@ -51,7 +56,6 @@ class Confirmacion extends Component {
 			}
 			this.setState({
 				data,
-				loading: false,
 			});
 		});
 	};
@@ -64,7 +68,15 @@ class Confirmacion extends Component {
 				if (columna == 'diesel') {
 					this.handleChangeDiesel(id, value);
 				}
-				viaje[columna] = value;
+				modificarGasto({
+					idViaje: id,
+					TipoGasto: columna[0].toUpperCase() + columna.slice(1),
+					presupuesto: value,
+				}).then((response) => {
+					if (response.headerResponse.code == 200) {
+						viaje[columna] = value;
+					}
+				});
 			}
 			return viaje;
 		});
@@ -423,8 +435,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'casetas')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'casetas')
 								}
 							/>
 						),
@@ -440,8 +452,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'viaticos')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'viaticos')
 								}
 							/>
 						),
@@ -457,8 +469,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'comision')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'comision')
 								}
 							/>
 						),
@@ -474,8 +486,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'maniobras')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'maniobras')
 								}
 							/>
 						),
@@ -491,8 +503,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'custodia')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'custodia')
 								}
 							/>
 						),
@@ -508,8 +520,8 @@ class Confirmacion extends Component {
 								formatter={(value) =>
 									`${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 								}
-								onChange={(value) =>
-									this.handleChange(record.key, value, 'externo')
+								onBlur={(value) =>
+									this.handleChange(record.key, value.target.value, 'externo')
 								}
 							/>
 						),
