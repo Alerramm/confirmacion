@@ -81,7 +81,7 @@ class Confirmacion extends Component {
 							});
 						}
 					}
-					viaje[columna] = value.replace(/,/g, '');
+					viaje[columna] = value.toString().replace(/,/g, '');
 				}
 				return viaje;
 			}),
