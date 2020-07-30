@@ -380,6 +380,11 @@ class Confirmacion extends Component {
 				],
 			},
 			{
+				title: 'TIPO SERVICIO',
+				dataIndex: 'tipoPrecio',
+				key: 'tipoPrecio',
+			},
+			{
 				title: 'PRECIO',
 				dataIndex: 'precio',
 				key: 'precio',
