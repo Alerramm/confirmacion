@@ -6,6 +6,7 @@ import {
 	modificarOperador,
 	modificarDiesel,
 	modificarGasto,
+	modificarPrecio,
 } from './ConfirmacionActions';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 const { Content } = Layout;
@@ -57,6 +58,43 @@ class Confirmacion extends Component {
 			}
 		});
 	};
+	handleChangePrecio = (viaje, value) => {
+		const precio = value ? value.toString().replace(/,/g, '') : value;
+		if (precio > 0) {
+			const idMetricasPrecio = viaje.idMetricasPrecio;
+			const totalGastos =
+				parseInt(viaje.diesel ? viaje.diesel : 0) +
+				parseInt(viaje.casetas ? viaje.casetas : 0) +
+				parseInt(viaje.viaticos ? viaje.viaticos : 0) +
+				parseInt(viaje.comision ? viaje.comision : 0) +
+				parseInt(viaje.maniobras ? viaje.maniobras : 0) +
+				parseInt(viaje.custodia ? viaje.custodia : 0) +
+				parseInt(viaje.externo ? viaje.externo : 0);
+			const { data } = this.state;
+			this.setState({
+				data: data.map((element) => {
+					if (viaje.idViaje === element.idViaje) {
+						modificarPrecio({
+							idViaje: viaje.idViaje,
+							precio,
+							idMetricasPrecio,
+							totalGastos,
+						}).then((response) => {
+							if (response.headerResponse.code == 200) {
+							}
+						});
+
+						element.porcentaje_gasto = 100;
+						if (precio >= totalGastos) {
+							element.porcentaje_gasto = (totalGastos / 1.16 / precio).toFixed(2);
+						}
+						element.precio = precio ? precio.toString().replace(/,/g, '') : precio;
+					}
+					return element;
+				}),
+			});
+		}
+	};
 
 	//ok
 	handleChange = (id, value, columna) => {
@@ -67,19 +105,15 @@ class Confirmacion extends Component {
 					if (columna == 'diesel') {
 						this.handleChangeDiesel(id, value);
 					} else {
-						if (columna == 'precio') {
-							//aqui va endpoint de precio
-						} else {
-							modificarGasto({
-								idViaje: id,
-								TipoGasto: columna[0].toUpperCase() + columna.slice(1),
-								presupuesto: value,
-							}).then((response) => {
-								if (response.headerResponse.code == 200) {
-									//aqui va si se modifico gasto en la base de datos
-								}
-							});
-						}
+						modificarGasto({
+							idViaje: id,
+							TipoGasto: columna[0].toUpperCase() + columna.slice(1),
+							presupuesto: value,
+						}).then((response) => {
+							if (response.headerResponse.code == 200) {
+								//aqui va si se modifico gasto en la base de datos
+							}
+						});
 					}
 					viaje[columna] = value ? value.toString().replace(/,/g, '') : value;
 				}
@@ -397,7 +431,7 @@ class Confirmacion extends Component {
 							color: 'green',
 						}}
 						formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-						onChange={(value) => this.handleChange(record.key, value, 'precio')}
+						onBlur={(value) => this.handleChangePrecio(record, value.target.value)}
 					/>
 				),
 			},
