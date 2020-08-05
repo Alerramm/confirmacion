@@ -17,3 +17,5 @@ export const MODIFY_OPERADOR = BASE_CONFIRMATION_URL + 'post/modifyStatusTravel.
 export const RENDIMIENTO = BASE_CONFIRMATION_URL + 'post/diesel.php';
 /** MODIFICAR GASTO */
 export const MODIFICAR_GASTO = BASE_CONFIRMATION_URL + 'post/modificarGasto.php';
+/** MODIFICAR PRECIO */
+export const MODIFICAR_PRECIO = BASE_CONFIRMATION_URL + 'put/porcentajeGasto.php';
